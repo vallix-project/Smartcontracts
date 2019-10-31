@@ -147,28 +147,18 @@ contract VALLIXToken is ERC20Interface, OwnerHelper
         return true;
     }
     
-    function privateIssue(address _to, uint _value, bool _type) onlyMaster public
+    function privateIssue(address _to, uint _value) onlyMaster public
     {
         
         uint tokens = _value * E18;
         require(maxSaleSupply >= tokenIssuedSale.add(tokens));
         
         balances[msg.sender] = balances[msg.sender].sub(tokens);
-        if(_type == false)
-        {
-            balances[_to]                   = balances[_to].add( tokens.mul(40)/100 );
-            privateFirstWallet[_to]         = privateFirstWallet[_to].add( tokens.mul(30)/100 );
-            privateSecondWallet[_to]        = privateSecondWallet[_to].add( tokens.mul(30)/100 );
-        } 
-        else if(_type == true)
-        {
-            balances[_to]                   = balances[_to].add( tokens.mul(15)/100 );
-            privateFirstWallet[_to]         = privateFirstWallet[_to].add( tokens.mul(15)/100 );
-            privateSecondWallet[_to]        = privateSecondWallet[_to].add( tokens.mul(20)/100 );
-            privateThirdWallet[_to]         = privateThirdWallet[_to].add( tokens.mul(20)/100 );
-            privateFourthWallet[_to]        = privateFourthWallet[_to].add( tokens.mul(30)/100 );
-        }
-
+        
+        balances[_to]                   = balances[_to].add( tokens.mul(40)/100 );
+        privateFirstWallet[_to]         = privateFirstWallet[_to].add( tokens.mul(30)/100 );
+        privateSecondWallet[_to]        = privateSecondWallet[_to].add( tokens.mul(30)/100 );
+        
         tokenIssuedSale = tokenIssuedSale.add(tokens);
         privateIssuedSale = privateIssuedSale.add(tokens);
         
@@ -188,6 +178,28 @@ contract VALLIXToken is ERC20Interface, OwnerHelper
         
         tokenIssuedSale = tokenIssuedSale.add(tokens);
         publicIssuedSale = publicIssuedSale.add(tokens);
+        
+        emit SaleIssue(_to, tokens);
+        
+        emit Transfer(msg.sender, _to, tokens);
+    }
+    
+    function seedIssue(address _to, uint _value) onlyMaster public
+    {
+        
+        uint tokens = _value * E18;
+        require(maxSaleSupply >= tokenIssuedSale.add(tokens));
+        
+        balances[msg.sender] = balances[msg.sender].sub(tokens);
+        
+        balances[_to]                   = balances[_to].add( tokens.mul(15)/100 );
+        privateFirstWallet[_to]         = privateFirstWallet[_to].add( tokens.mul(15)/100 );
+        privateSecondWallet[_to]        = privateSecondWallet[_to].add( tokens.mul(20)/100 );
+        privateThirdWallet[_to]         = privateThirdWallet[_to].add( tokens.mul(20)/100 );
+        privateFourthWallet[_to]        = privateFourthWallet[_to].add( tokens.mul(30)/100 );
+
+        tokenIssuedSale = tokenIssuedSale.add(tokens);
+        privateIssuedSale = privateIssuedSale.add(tokens);
         
         emit SaleIssue(_to, tokens);
         
